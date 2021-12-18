@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os, json
-from pathlib import Path
+import local, aws
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 
@@ -66,6 +66,15 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'working.urls'
+AUTH_USER_MODEL = 'account.User_Tb'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
 
 TEMPLATES = [
     {
@@ -89,12 +98,11 @@ WSGI_APPLICATION = 'working.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# 로컬 작업용
+DATABASES = local.DATABASES
+
+# 서버 배포용
+# DATABASES = aws.DATABASES
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
