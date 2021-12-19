@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os, json
-import local, aws
+from . import local, aws
 from datetime import timedelta
 from django.core.exceptions import ImproperlyConfigured
 
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'working.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 # 로컬 작업용
-DATABASES = local.DATABASES
+DATABASES = 'local.DATABASES'
 
 # 서버 배포용
 # DATABASES = aws.DATABASES
