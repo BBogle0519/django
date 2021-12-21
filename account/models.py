@@ -1,12 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser, PermissionsMixin)
+from django.contrib.auth.models import (
+    BaseUserManager, AbstractBaseUser, PermissionsMixin)
+
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, user_id, user_nm, user_ph, user_email, user_reg_ymd, user_st, password=None):
-        """
-        Creates and saves a User with the given email, date of
-        birth and password.
-        """
+    def create_user(self, user_id, user_nm, user_ph, user_email, password=None):
         if not user_id:
             raise ValueError('Users must have an user_id')
 
@@ -15,27 +13,19 @@ class MyUserManager(BaseUserManager):
             user_nm=user_nm,
             user_ph=user_ph,
             user_email=self.normalize_email(user_email),
-            user_reg_ymd=user_reg_ymd,
-            user_st=user_st,
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, user_id, user_nm, user_ph, user_email, user_reg_ymd, user_st, password=None):
-        """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
-        """
+    def create_superuser(self, user_id, user_nm, user_ph, user_email, password):
         user = self.create_user(
             user_id=user_id,
             password=password,
             user_nm=user_nm,
             user_ph=user_ph,
             user_email=self.normalize_email(user_email),
-            user_reg_ymd=user_reg_ymd,
-            user_st=user_st,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -49,13 +39,11 @@ class User_Tb(AbstractBaseUser, PermissionsMixin):
     user_id = models.CharField(
         db_column='USER_ID', unique=True, max_length=20, blank=True, null=True)
     # Field name made lowercase.
-    user_pw = models.CharField(
-        db_column='USER_PW', max_length=255, blank=True, null=True)
-    # Field name made lowercase.
     user_nm = models.CharField(
         db_column='USER_NM', max_length=20, blank=True, null=True)
     # Field name made lowercase.
-    user_ph = models.IntegerField(db_column='USER_PH', blank=True, null=True)
+    user_ph = models.IntegerField(
+        db_column='USER_PH', blank=True, null=True)
     # Field name made lowercase.
     user_email = models.CharField(
         db_column='USER_EMAIL', max_length=50, blank=True, null=True)
@@ -65,14 +53,15 @@ class User_Tb(AbstractBaseUser, PermissionsMixin):
     # Field name made lowercase.
     user_st = models.IntegerField(
         db_column='USER_ST', blank=True, null=True, default=1)
+    is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    
+
     objects = MyUserManager()
 
     USERNAME_FIELD = 'user_id'
 
     # 필수로 입력받을 필드 추가
-    REQUIRED_FIELDS = [
+    REQUIRED_FIELDS = ['user_nm', 'user_ph', 'user_email'
     ]
 
     def __str__(self):
