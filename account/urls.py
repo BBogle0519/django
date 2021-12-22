@@ -10,6 +10,7 @@ from rest_framework_simplejwt.views import(
 # router를 필수로 사용해야하는건 아님. url 깔끔하게 정리하는 용도로 생각
 router = routers.DefaultRouter()
 router.register('Join', views.JoinViewSet, basename = "Join")
+router.register('user', views.UserViewSet)
 # router.register('Login', views.LoginUser, basename = "LoginUser")
 
 urlpatterns = [

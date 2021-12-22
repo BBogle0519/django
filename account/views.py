@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
 from .models import User_Tb
-from .serializers import JoinSerializer, LoginSerializer
+from .serializers import JoinSerializer, LoginSerializer, UserSerializer
 
 # import bcrypt
 
@@ -59,7 +59,7 @@ def LoginView(request):
                     'refresh': str(token),
                     'access': str(token.access_token),
                 }
-                print("token result: " + str(token))
+                # print("token result: " + str(token))
                 return Response(data, status=status.HTTP_200_OK)
 
             # if bcrypt.checkpw(request.data['password'].encode('utf-8'), user.password.encode('utf-8')):
@@ -80,3 +80,8 @@ def LoginView(request):
         except User_Tb.MultipleObjectsReturned:
             # print("테이블에 user_id unique로 박혀있어서 여기 올일은 없음")
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# postman에서 토큰 테스트용 api
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User_Tb.objects.all()
+    serializer_class = UserSerializer

@@ -36,3 +36,9 @@ class LoginSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Tb
         fields = ('id', 'user_id', 'password',)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User_Tb
+        fields = "__all__"
