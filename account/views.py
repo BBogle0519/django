@@ -56,6 +56,7 @@ def LoginView(request):
             if (authenticate(user_id=request.data.get('user_id'), password=request.data.get('password'))):
                 token = RefreshToken.for_user(user)
                 data = {
+                    'user_id': user,
                     'refresh': str(token),
                     'access': str(token.access_token),
                 }
