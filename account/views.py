@@ -1,7 +1,7 @@
 from rest_framework import serializers, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
@@ -49,14 +49,17 @@ def LoginView(request):
         # print("[request.data]: " + str(request.data))
         try:
             user = User_Tb.objects.get(user_id=request.data.get('user_id'))
+            id = User_Tb.objects.values("id").get(user_id=user)['id']
             # serializer = LoginSerializer(data=request.data)
             # print("query user: " + str(user))
-
+            # print("id: " + str(id))
+            
             # authenticate(request=None, **credentials) 장고 제공 인증 함수
             if (authenticate(user_id=request.data.get('user_id'), password=request.data.get('password'))):
                 token = RefreshToken.for_user(user)
                 data = {
-                    'user_id': user,
+                    'id' : str(id),
+                    'user_id': str(user),
                     'refresh': str(token),
                     'access': str(token.access_token),
                 }
@@ -82,7 +85,8 @@ def LoginView(request):
             # print("테이블에 user_id unique로 박혀있어서 여기 올일은 없음")
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-# postman에서 토큰 테스트용 api
+# postman 토큰인증 테스트용 api
+@permission_classes([IsAuthenticated])
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User_Tb.objects.all()
     serializer_class = UserSerializer
