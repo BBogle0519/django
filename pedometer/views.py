@@ -8,7 +8,7 @@ from .serializers import StepCountSerializer
 
 # Create your views here.
 
-
+# 측정된 걸음수 저장
 @permission_classes([AllowAny])
 class StepCountViewSet(viewsets.ModelViewSet):
     queryset = stepCount.objects.all()
@@ -22,4 +22,9 @@ class StepCountViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# 총 걸음수 확인
+
+# 걸음수 날짜별 확인(년, 월, 주)
