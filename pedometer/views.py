@@ -1,3 +1,5 @@
+
+from django.db.models.functions.datetime import ExtractDay, ExtractWeek, ExtractWeekDay, ExtractYear
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes, api_view
@@ -5,6 +7,9 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from .models import stepCount
 from .serializers import StepCountSerializer
+
+from django.db.models.aggregates import Sum
+from django.db.models.functions import ExtractMonth
 
 # Create your views here.
 
@@ -30,7 +35,7 @@ class StepCountViewSet(viewsets.ModelViewSet):
 # 걸음수 날짜별 확인(년, 월, 주)
 @permission_classes([AllowAny])
 @api_view(['POST'])
-def StepStatistics(request):
+def StepStatisticsView(request):
     if request.method == 'POST':
         # 1번 방법
         # if request == 년도별
@@ -55,6 +60,30 @@ def StepStatistics(request):
         # data= {'년': year, '월' : month, '주' : week}
 
         #return Response(data,status=status.HTTP_200_OK)
+
+        print("[request.data]: " + str(request.data))
         
-        pass
-        
+        if stepCount.objects.filter(user_id_pk=request.data['user_id_pk']).exists():
+            year_data = stepCount.objects.annotate(year=ExtractYear('record')).values('year').annotate(step=Sum('step')).values('year', 'step').order_by('year')
+            month_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record')).values('year', 'month').annotate(step=Sum('step')).values('year', 'month', 'step').order_by('year', 'month')
+            day_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record'), day=ExtractDay('record')).values('year', 'month', 'day').annotate(step=Sum('step')).values('year', 'month', 'day', 'step').order_by('year', 'month', 'day')
+
+            # print("[year_data]: " + str(year_data))
+            # print("[month_data]: " + str(month_data))
+            # print("[day_data]: " + str(day_data))
+
+            data = {
+                'message' : 'ok',
+                'year_data' : year_data,
+                'month_data' : month_data,
+                'day_data' : day_data,
+            }
+            return Response(data, status=status.HTTP_200_OK)
+
+        else :
+            data ={
+                'message' : 'DoesNotExist',
+            }
+
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+

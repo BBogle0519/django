@@ -7,4 +7,5 @@ router.register('Step', views.StepCountViewSet, basename="Step")
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('Statistics/', views.StepStatisticsView, name='Statistics'),
 ]
