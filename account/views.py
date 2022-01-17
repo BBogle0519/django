@@ -12,14 +12,13 @@ from .serializers import JoinSerializer, LoginSerializer, UserSerializer
 
 # Create your views here.
 
-
 @permission_classes([AllowAny])
 class JoinViewSet(viewsets.ModelViewSet):
     queryset = User_Tb.objects.all()
     serializer_class = JoinSerializer
 
     def create(self, request, *args, **kwargs):
-       # print("[request.data]: " + str(request.data))
+        print("[request.data]: " + str(request.data))
 
         # 사용자 비밀번호 암호화하여 저장
         # pw = request.data['password'].encode('utf-8')

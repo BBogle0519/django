@@ -4,7 +4,7 @@ from django.contrib.auth.models import (
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, user_id, user_nm, user_ph, user_email, password=None):
+    def create_user(self, user_id, user_nm, user_ph, user_sex, user_tall, user_email, password=None):
         if not user_id:
             raise ValueError('Users must have an user_id')
 
@@ -12,6 +12,8 @@ class MyUserManager(BaseUserManager):
             user_id=user_id,
             user_nm=user_nm,
             user_ph=user_ph,
+            user_sex=user_sex,
+            user_tall=user_tall,
             user_email=self.normalize_email(user_email),
         )
 
@@ -44,6 +46,12 @@ class User_Tb(AbstractBaseUser, PermissionsMixin):
     # Field name made lowercase.
     user_ph = models.IntegerField(
         db_column='USER_PH', blank=True, null=True)
+    # Field name made lowercase.
+    user_sex = models.IntegerField(
+        db_column='USER_SEX', blank=True, null=True) # 0이면 남성 1이면 여성)
+    # Field name made lowercase.
+    user_tall = models.IntegerField(
+        db_column='USER_TALL', blank=True, null=True)
     # Field name made lowercase.
     user_email = models.CharField(
         db_column='USER_EMAIL', max_length=50, blank=True, null=True)

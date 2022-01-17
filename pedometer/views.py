@@ -61,7 +61,7 @@ def StepStatisticsView(request):
 
         #return Response(data,status=status.HTTP_200_OK)
 
-        print("[request.data]: " + str(request.data))
+        # print("[request.data]: " + str(request.data))
         
         if stepCount.objects.filter(user_id_pk=request.data['user_id_pk']).exists():
             year_data = stepCount.objects.annotate(year=ExtractYear('record')).values('year').annotate(step=Sum('step')).values('year', 'step').order_by('year')
@@ -78,6 +78,8 @@ def StepStatisticsView(request):
                 'month_data' : month_data,
                 'day_data' : day_data,
             }
+            # print("[data]: " + str(data))
+
             return Response(data, status=status.HTTP_200_OK)
 
         else :

@@ -11,7 +11,7 @@ class Myadmin(BaseMemberAdmin):
     # form = MemberChangeForm
     # add_form = MemberCreationForm
 
-    list_display = ('id', 'password', 'user_id', 'user_nm', 'user_ph',
+    list_display = ('id', 'password', 'user_id', 'user_nm', 'user_ph','user_sex', 'user_tall',
                     'user_email', 'user_reg_ymd', 'user_st',)
     list_filter = ()
     search_fields = ('user_id',)

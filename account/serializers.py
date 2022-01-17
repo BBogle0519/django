@@ -10,6 +10,8 @@ class JoinSerializer(serializers.ModelSerializer):
             password=validated_data['password'],
             user_nm=validated_data['user_nm'],
             user_ph=validated_data['user_ph'],
+            user_sex=validated_data['user_sex'],
+            user_tall=validated_data['user_tall'],
             user_email=validated_data['user_email'],
         )
 
@@ -18,7 +20,7 @@ class JoinSerializer(serializers.ModelSerializer):
     class Meta:
         model = User_Tb
         fields = ('user_id', 'password', 'user_nm',
-                  'user_ph', 'user_email',)
+                  'user_ph', 'user_sex', 'user_tall', 'user_email',)
 
 # 로그인
 
