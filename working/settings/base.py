@@ -18,7 +18,7 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-secret_file = os.path.join(BASE_DIR,'secrets.json')
+secret_file = os.path.join(BASE_DIR, 'secrets.json')
 
 with open(secret_file) as f:
     secrets = json.loads(f.read())
@@ -110,7 +110,7 @@ WSGI_APPLICATION = 'working.wsgi.application'
 DATABASES = 'local.DATABASES'
 
 # 서버 배포용
-# DATABASES = aws.DATABASES
+# DATABASES = 'aws.DATABASES'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=2),

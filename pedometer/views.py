@@ -37,36 +37,11 @@ class StepCountViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def StepStatisticsView(request):
     if request.method == 'POST':
-        # 1번 방법
-        # if request == 년도별
-        # data = fitter (request=사용자 id, 연별로 묶은step수)
-        # return Response(data,status=status.HTTP_200_OK)
- 
-        # else if request == 월별
-        # data = fitter (request=사용자 id, 월별로 묶은step수)
-        # return Response(data,status=status.HTTP_200_OK)
- 
-        # else if request == 주별
-        # data = fitter (request=사용자 id, 주별로 묶은step수)
-        # return Response(data,status=status.HTTP_200_OK)
-
-        #-------------or------------
-        # 2번 방법
-        # 한번에 년월주 데이터 response
-        # year = fitter (request=사용자 id, 연별로 묶은step수)
-        # month = ...
-        # week = ...
-
-        # data= {'년': year, '월' : month, '주' : week}
-
-        #return Response(data,status=status.HTTP_200_OK)
-
         # print("[request.data]: " + str(request.data))
-        
         if stepCount.objects.filter(user_id_pk=request.data['user_id_pk']).exists():
-            year_data = stepCount.objects.annotate(year=ExtractYear('record')).values('year').annotate(step=Sum('step')).values('year', 'step').order_by('year')
-            month_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record')).values('year', 'month').annotate(step=Sum('step')).values('year', 'month', 'step').order_by('year', 'month')
-            day_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record'), day=ExtractDay('record')).values('year', 'month', 'day').annotate(step=Sum('step')).values('year', 'month', 'day', 'step').order_by('year', 'month', 'day')
+            year_data = stepCount.objects.annotate(year=ExtractYear('record')).values('year').annotate(step=Sum('step'), distance=Sum('distance')).values('year', 'step', 'distance').order_by('year')
+            month_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record')).values('year', 'month').annotate(step=Sum('step'), distance=Sum('distance')).values('year', 'month', 'step', 'distance').order_by('year', 'month')
+            day_data = stepCount.objects.annotate(year=ExtractYear('record'), month=ExtractMonth('record'), day=ExtractDay('record')).values('year', 'month', 'day').annotate(step=Sum('step', distance=Sum('distance'))).values('year', 'month', 'day', 'step', 'distance').order_by('year', 'month', 'day')
 
             # print("[year_data]: " + str(year_data))
             # print("[month_data]: " + str(month_data))
@@ -88,4 +63,4 @@ def StepStatisticsView(request):
             }
 
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
-
+            

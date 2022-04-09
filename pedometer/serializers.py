@@ -5,4 +5,4 @@ from .models import stepCount
 class StepCountSerializer(serializers.ModelSerializer):
     class Meta:
         model = stepCount
-        fields = ('step', 'record', 'user_id_pk')
+        fields = ('step', 'record', 'distance', 'user_id_pk')
